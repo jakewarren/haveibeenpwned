@@ -132,7 +132,7 @@ func printPasteResults(email string) {
 			}
 
 		}
-		defResponse += fmt.Sprintf("\n%s\n\ttitle:\t%s\n\tdate:\t%s\n\tbreach_date:\t%s\n\temail_count:\t%s\n", paste.Source, paste.Title, paste.ID, paste.Date, CommifyNumber(paste.EmailCount))
+		defResponse += fmt.Sprintf("\n%s\n\ttitle:\t\t%s\n\tID:\t\t%s\n\tbreach_date:\t%s\n\temail_count:\t%s\n", paste.Source, paste.Title, paste.ID, paste.Date, CommifyNumber(paste.EmailCount))
 
 		if *debug {
 			defResponse += fmt.Sprintf("%#+v\n", paste)

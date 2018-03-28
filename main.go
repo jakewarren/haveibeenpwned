@@ -97,6 +97,8 @@ func printBreachResults(email string) {
 		} else {
 			fmt.Printf("%d breaches returned for %s (%d filtered out)\n", breachCount, email, (len(breaches) - breachCount))
 		}
+	} else if breachCount > 0 {
+		fmt.Printf("%d breaches returned for %s (%d filtered out)\n", breachCount, email, (len(breaches) - breachCount))
 	}
 
 	fmt.Print(defResponse)

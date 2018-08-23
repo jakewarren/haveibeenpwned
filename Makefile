@@ -24,7 +24,7 @@ release: gox
 
 #Build a development build
 dev: 
-	@CGO_ENABLED=0 go build --installsuffix cgo ${LDFLAGS_DEV} -o bin/${BINARY}
+	@CGO_ENABLED=0 go build --installsuffix cgo ${LDFLAGS_DEV} -o bin/${BINARY} github.com/jakewarren/haveibeenpwned/cmd/haveibeenpwned
 
 #Install a release build on your local system
 install: clean

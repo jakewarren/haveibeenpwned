@@ -1,56 +1,20 @@
-package main
+package haveibeenpwned
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"time"
 
 	"github.com/apex/log"
-	"github.com/apex/log/handlers/cli"
 	"github.com/jakewarren/haveibeenpwned/api"
 	"github.com/jinzhu/now"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-var (
-	app = kingpin.New("haveibeenpwned", "Un-official API client for haveibeenpwned.com.")
 
-	debug      = app.Flag("debug", "print debug info").Short('d').Bool()
-	filterDate = app.Flag("filter-date", "only print breaches released after specified date").Short('f').String()
-	silent     = app.Flag("silent", "suppress response message, only display results").Short('s').Bool()
 
-	email = app.Arg("email", "the email address to lookup.").Required().String()
-)
 
-func main() {
-	app.Version("0.1.0").VersionFlag.Short('V')
-	app.HelpFlag.Short('h')
-	app.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
-	kingpin.MustParse(app.Parse(os.Args[1:]))
 
-	log.SetHandler(cli.New(os.Stderr))
-	log.SetLevel(log.ErrorLevel)
-
-	if *silent {
-		//turn off errors
-		log.SetLevel(log.FatalLevel)
-	}
-
-	if *debug {
-		log.SetLevel(log.DebugLevel)
-	}
-
-	printBreachResults(*email)
-
-	//sleep to respect the haveibeenpwned API rate limiting
-	time.Sleep(2 * time.Second)
-
-	printPasteResults(*email)
-
-}
-
-func printBreachResults(email string) {
+func PrintBreachResults(email string, filterDate string, debug bool, silent bool) {
 	//query results for the email address
 	breaches, err := api.LookupEmailBreaches(email)
 	if err != nil {
@@ -63,8 +27,8 @@ func printBreachResults(email string) {
 
 	for _, breach := range breaches {
 
-		if *filterDate != "" {
-			filterTime, err := now.Parse(*filterDate)
+		if filterDate != "" {
+			filterTime, err := now.Parse(filterDate)
 			if err != nil {
 				log.WithError(err).Error("error parsing filter time")
 			}
@@ -82,7 +46,7 @@ func printBreachResults(email string) {
 		}
 		defResponse += fmt.Sprintf("\n%s\n\tdomain:\t\t%s\n\tadded_date:\t%s\n\tbreach_date:\t%s\n", breach.Title, breach.Domain, breach.AddedDate, breach.BreachDate)
 		defResponse += fmt.Sprintf("\temail_count:\t%s\n\tverified:\t%t\n", CommifyNumber(breach.PwnCount), breach.IsVerified)
-		if *debug {
+		if debug {
 			defResponse += fmt.Sprintf("%#+v\n", breach)
 		}
 
@@ -91,8 +55,8 @@ func printBreachResults(email string) {
 		breachCount++
 	}
 
-	if !*silent {
-		if *filterDate == "" {
+	if !silent {
+		if filterDate == "" {
 			fmt.Printf("%d breaches returned for %s\n", breachCount, email)
 		} else {
 			fmt.Printf("%d breaches returned for %s (%d filtered out)\n", breachCount, email, (len(breaches) - breachCount))
@@ -104,7 +68,7 @@ func printBreachResults(email string) {
 	fmt.Print(defResponse)
 }
 
-func printPasteResults(email string) {
+func PrintPasteResults(email string, filterDate string, debug bool, silent bool) {
 	//query results for the email address
 	pastes, err := api.LookupEmailPastes(email)
 	if err != nil {
@@ -117,8 +81,8 @@ func printPasteResults(email string) {
 
 	for _, paste := range pastes {
 
-		if *filterDate != "" {
-			filterTime, err := now.Parse(*filterDate)
+		if filterDate != "" {
+			filterTime, err := now.Parse(filterDate)
 			if err != nil {
 				log.WithError(err).Error("error parsing filter time")
 			}
@@ -136,15 +100,15 @@ func printPasteResults(email string) {
 		}
 		defResponse += fmt.Sprintf("\n%s\n\ttitle:\t\t%s\n\tID:\t\t%s\n\tbreach_date:\t%s\n\temail_count:\t%s\n", paste.Source, paste.Title, paste.ID, paste.Date, CommifyNumber(paste.EmailCount))
 
-		if *debug {
+		if debug {
 			defResponse += fmt.Sprintf("%#+v\n", paste)
 		}
 
 		pasteCount++
 	}
 
-	if !*silent {
-		if *filterDate == "" {
+	if !silent {
+		if filterDate == "" {
 			fmt.Printf("%d pastes returned for %s\n", pasteCount, email)
 		} else {
 			fmt.Printf("%d pastes returned for %s (%d filtered out)\n", pasteCount, email, (len(pastes) - pasteCount))

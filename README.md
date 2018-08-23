@@ -4,6 +4,7 @@
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/jakewarren/haveibeenpwned/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jakewarren/haveibeenpwned)](https://goreportcard.com/report/github.com/jakewarren/haveibeenpwned)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=shields)](http://makeapullrequest.com)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/jakewarren/haveibeenpwned/api)
 
 > library and cmd-line client for the HIBP API
 
@@ -43,6 +44,37 @@ All notable changes to this project will be documented in the [changelog].
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Example of using the library
+
+```
+package main
+
+import (
+
+	"fmt"
+	"log"
+    "github.com/jakewarren/haveibeenpwned/api"
+
+)
+
+func main() {
+
+	breachData,err := hibp.LookupEmailBreaches("test@example.com")
+	
+	if err != nil {
+
+		log.Fatal(err)
+
+	}
+
+
+	for _,breach := range breachData {
+
+		fmt.Printf("Breach: %s\n",breach.Title)
+	
+	}
+}
+```
 ## License
 
 MIT © 2018 Jake Warren

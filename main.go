@@ -25,10 +25,12 @@ var (
 	email = app.Arg("email", "the email address to lookup.").Required().String()
 
 	client *api.Client
+
+	version = "(ﾉ☉ヮ⚆)ﾉ ⌒*:･ﾟ✧"
 )
 
 func main() {
-	app.Version("0.1.0").VersionFlag.Short('V')
+	app.Version(version).VersionFlag.Short('V')
 	app.HelpFlag.Short('h')
 	app.UsageTemplate(kingpin.SeparateOptionalFlagsUsageTemplate)
 	kingpin.MustParse(app.Parse(os.Args[1:]))

@@ -59,19 +59,18 @@ import (
 
 func main() {
 
-	breachData,err := hibp.LookupEmailBreaches("test@example.com")
+    // initialize the client with your API token
+    client = api.NewClient("abc123")
+
+	breachData,err := client.LookupEmailBreaches("test@example.com")
 	
 	if err != nil {
-
 		log.Fatal(err)
-
 	}
 
 
 	for _,breach := range breachData {
-
 		fmt.Printf("Breach: %s\n",breach.Title)
-	
 	}
 }
 ```

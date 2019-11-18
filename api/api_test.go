@@ -1,3 +1,4 @@
+//nolint:funlen
 package api
 
 import (
@@ -10,6 +11,8 @@ import (
 
 func TestLookupEmailBreaches(t *testing.T) {
 	defer gock.Off() // Flush pending mocks after test execution
+
+	c := NewClient("")
 
 	//test a successful call
 	gock.New("https://haveibeenpwned.com").
@@ -32,7 +35,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 	"LogoType": "png"
 }]`)
 
-	breaches, err := LookupEmailBreaches("test@example.com")
+	breaches, err := c.LookupEmailBreaches("test@example.com")
 
 	//err should be nil
 	assert.Nil(t, err)
@@ -45,7 +48,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 	//test a 400 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(400)
-	_, err = LookupEmailBreaches("test@example.com")
+	_, err = c.LookupEmailBreaches("test@example.com")
 	if assert.NotNil(t, err, "testing 400 status code") {
 		assert.Equal(t, "bad request - the provided email address is not acceptable", err.Error(), "testing 400 status code")
 	}
@@ -53,7 +56,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 	//test a 404 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(404)
-	_, err = LookupEmailBreaches("test@example.com")
+	_, err = c.LookupEmailBreaches("test@example.com")
 	if assert.NotNil(t, err, "testing 404 status code") {
 		assert.Equal(t, "not found - the account could not be found at haveibeenpwned.com", err.Error(), "testing 404 status code")
 	}
@@ -61,7 +64,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 	//test a 429 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(429)
-	_, err = LookupEmailBreaches("test@example.com")
+	_, err = c.LookupEmailBreaches("test@example.com")
 	if assert.NotNil(t, err, "testing 429 status code") {
 		assert.Equal(t, "rate limit exceeded", err.Error(), "testing 429 status code")
 	}
@@ -71,7 +74,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 		Reply(200).
 		JSON("{this is broken JSON! ")
 
-	_, jsonErr := LookupEmailBreaches("test@example.com")
+	_, jsonErr := c.LookupEmailBreaches("test@example.com")
 	if assert.NotNil(t, jsonErr, "invalid json should produce error") {
 		assert.Equal(t, "invalid character 't' looking for beginning of object key string", jsonErr.Error(), "did not receive expected JSON error")
 	}
@@ -99,7 +102,9 @@ func TestLookupEmailPastes(t *testing.T) {
 }
 ]`)
 
-	pastes, err := LookupEmailPastes("test@example.com")
+	c := NewClient("")
+
+	pastes, err := c.LookupEmailPastes("test@example.com")
 
 	//err should be nil
 	assert.Nil(t, err)
@@ -113,7 +118,7 @@ func TestLookupEmailPastes(t *testing.T) {
 	//test a 400 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(400)
-	_, err = LookupEmailPastes("test@example.com")
+	_, err = c.LookupEmailPastes("test@example.com")
 	if assert.NotNil(t, err, "testing 400 status code") {
 		assert.Equal(t, "bad request - the provided email address is not acceptable", err.Error(), "testing 400 status code")
 	}
@@ -121,7 +126,7 @@ func TestLookupEmailPastes(t *testing.T) {
 	//test a 404 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(404)
-	_, err = LookupEmailPastes("test@example.com")
+	_, err = c.LookupEmailPastes("test@example.com")
 	if assert.NotNil(t, err, "testing 404 status code") {
 		assert.Equal(t, "not found - the account could not be found at haveibeenpwned.com", err.Error(), "testing 404 status code")
 	}
@@ -129,7 +134,7 @@ func TestLookupEmailPastes(t *testing.T) {
 	//test a 429 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(429)
-	_, err = LookupEmailPastes("test@example.com")
+	_, err = c.LookupEmailPastes("test@example.com")
 	if assert.NotNil(t, err, "testing 429 status code") {
 		assert.Equal(t, "rate limit exceeded", err.Error(), "testing 429 status code")
 	}
@@ -139,7 +144,7 @@ func TestLookupEmailPastes(t *testing.T) {
 		Reply(200).
 		JSON("{this is broken JSON! ")
 
-	_, jsonErr := LookupEmailPastes("test@example.com")
+	_, jsonErr := c.LookupEmailPastes("test@example.com")
 	if assert.NotNil(t, jsonErr, "invalid json should produce error") {
 		assert.Equal(t, "invalid character 't' looking for beginning of object key string", jsonErr.Error(), "did not receive expected JSON error")
 	}

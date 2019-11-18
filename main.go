@@ -8,7 +8,7 @@ import (
 
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/cli"
-	"github.com/jakewarren/haveibeenpwned/api"
+	"github.com/jakewarren/haveibeenpwned/v2/api"
 	"github.com/jinzhu/now"
 	"gopkg.in/alecthomas/kingpin.v2"
 )

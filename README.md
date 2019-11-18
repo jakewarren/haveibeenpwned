@@ -1,6 +1,7 @@
 # haveibeenpwned
 
 [![GitHub release](http://img.shields.io/github/release/jakewarren/haveibeenpwned.svg?style=flat-square)](https://github.com/jakewarren/haveibeenpwned/releases])
+[![CircleCI](https://circleci.com/gh/jakewarren/haveibeenpwned.svg?style=shield)](https://circleci.com/gh/jakewarren/haveibeenpwned)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/jakewarren/haveibeenpwned/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jakewarren/haveibeenpwned)](https://goreportcard.com/report/github.com/jakewarren/haveibeenpwned)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=shields)](http://makeapullrequest.com)
@@ -74,6 +75,11 @@ func main() {
 	}
 }
 ```
+
+## Thanks to :heart:
+
+* [@MasenkoHa](https://github.com/MasenkoHa)
+
 ## License
 
 MIT © 2018 Jake Warren

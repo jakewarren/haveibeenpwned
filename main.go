@@ -39,7 +39,7 @@ func main() {
 	log.SetLevel(log.ErrorLevel)
 
 	if *silent {
-		//turn off errors
+		// turn off errors
 		log.SetLevel(log.FatalLevel)
 	}
 
@@ -59,15 +59,14 @@ func main() {
 
 	printBreachResults(*email)
 
-	//sleep to respect the haveibeenpwned API rate limiting
+	// sleep to respect the haveibeenpwned API rate limiting
 	time.Sleep(2 * time.Second)
 
 	printPasteResults(*email)
-
 }
 
 func printBreachResults(email string) {
-	//query results for the email address
+	// query results for the email address
 	breaches, err := client.LookupEmailBreaches(email)
 	if err != nil {
 		log.WithError(err).Errorf("error looking up breach data for %s", email)
@@ -78,7 +77,6 @@ func printBreachResults(email string) {
 	var defResponse string
 
 	for _, breach := range breaches {
-
 		if *filterDate != "" {
 			filterTime, err := now.Parse(*filterDate)
 			if err != nil {
@@ -94,7 +92,6 @@ func printBreachResults(email string) {
 				log.Debugf("excluding %s (%s)", breach.Title, breach.AddedDate)
 				continue
 			}
-
 		}
 		defResponse += fmt.Sprintf("\n%s\n\tdomain:\t\t%s\n\tadded_date:\t%s\n\tbreach_date:\t%s\n", breach.Title, breach.Domain, breach.AddedDate, breach.BreachDate)
 		defResponse += fmt.Sprintf("\temail_count:\t%s\n\tverified:\t%t\n", CommifyNumber(breach.PwnCount), breach.IsVerified)
@@ -121,7 +118,7 @@ func printBreachResults(email string) {
 }
 
 func printPasteResults(email string) {
-	//query results for the email address
+	// query results for the email address
 	pastes, err := client.LookupEmailPastes(email)
 	if err != nil {
 		log.WithError(err).Errorf("error looking up paste data for %s", email)
@@ -132,7 +129,6 @@ func printPasteResults(email string) {
 	var defResponse string
 
 	for _, paste := range pastes {
-
 		if *filterDate != "" {
 			filterTime, err := now.Parse(*filterDate)
 			if err != nil {
@@ -148,7 +144,6 @@ func printPasteResults(email string) {
 				log.Debugf("excluding %s (%s)", paste.ID, paste.Date)
 				continue
 			}
-
 		}
 		defResponse += fmt.Sprintf("\n%s\n\ttitle:\t\t%s\n\tID:\t\t%s\n\tbreach_date:\t%s\n\temail_count:\t%s\n", paste.Source, paste.Title, paste.ID, paste.Date, CommifyNumber(paste.EmailCount))
 
@@ -170,7 +165,7 @@ func printPasteResults(email string) {
 	fmt.Print(defResponse)
 }
 
-//CommifyNumber takes a number and returns a string with the number using comma separators
+// CommifyNumber takes a number and returns a string with the number using comma separators
 func CommifyNumber(n int64) string {
 	in := strconv.FormatInt(n, 10)
 	out := make([]byte, len(in)+(len(in)-2+int(in[0]/'0'))/3)

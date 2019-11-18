@@ -14,7 +14,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 
 	c := NewClient("")
 
-	//test a successful call
+	// test a successful call
 	gock.New("https://haveibeenpwned.com").
 		Reply(200).JSON(`[{
 	"Title": "000webhost",
@@ -37,15 +37,15 @@ func TestLookupEmailBreaches(t *testing.T) {
 
 	breaches, err := c.LookupEmailBreaches("test@example.com")
 
-	//err should be nil
+	// err should be nil
 	assert.Nil(t, err)
 
-	//test a few values to make sure the JSON was decoded correctly
+	// test a few values to make sure the JSON was decoded correctly
 	gotBreach := breaches[0]
 	assert.Equal(t, "000webhost", gotBreach.Title, "decoded breach title not equal")
 	assert.Equal(t, int64(13545468), gotBreach.PwnCount, "decoded breach pwn count not equal")
 
-	//test a 400 response code
+	// test a 400 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(400)
 	_, err = c.LookupEmailBreaches("test@example.com")
@@ -53,7 +53,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 		assert.Equal(t, "bad request - the provided email address is not acceptable", err.Error(), "testing 400 status code")
 	}
 
-	//test a 404 response code
+	// test a 404 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(404)
 	_, err = c.LookupEmailBreaches("test@example.com")
@@ -61,7 +61,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 		assert.Equal(t, "not found - the account could not be found at haveibeenpwned.com", err.Error(), "testing 404 status code")
 	}
 
-	//test a 429 response code
+	// test a 429 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(429)
 	_, err = c.LookupEmailBreaches("test@example.com")
@@ -69,7 +69,7 @@ func TestLookupEmailBreaches(t *testing.T) {
 		assert.Equal(t, "rate limit exceeded", err.Error(), "testing 429 status code")
 	}
 
-	//test invalid json
+	// test invalid json
 	gock.New("https://haveibeenpwned.com").
 		Reply(200).
 		JSON("{this is broken JSON! ")
@@ -78,13 +78,12 @@ func TestLookupEmailBreaches(t *testing.T) {
 	if assert.NotNil(t, jsonErr, "invalid json should produce error") {
 		assert.Equal(t, "invalid character 't' looking for beginning of object key string", jsonErr.Error(), "did not receive expected JSON error")
 	}
-
 }
 
 func TestLookupEmailPastes(t *testing.T) {
 	defer gock.Off() // Flush pending mocks after test execution
 
-	//test a successful call
+	// test a successful call
 	gock.New("https://haveibeenpwned.com").
 		Reply(200).JSON(`[
 {
@@ -106,16 +105,16 @@ func TestLookupEmailPastes(t *testing.T) {
 
 	pastes, err := c.LookupEmailPastes("test@example.com")
 
-	//err should be nil
+	// err should be nil
 	assert.Nil(t, err)
 
-	//test a few values to make sure the JSON was decoded correctly
+	// test a few values to make sure the JSON was decoded correctly
 	gotPaste := pastes[0]
 	assert.Equal(t, "Pastebin", gotPaste.Source, "decoded paste source not equal")
 	assert.Equal(t, "8Q0BvKD8", gotPaste.ID, "decoded paste id not equal")
 	assert.Equal(t, "syslog", gotPaste.Title, "decoded paste title not equal")
 
-	//test a 400 response code
+	// test a 400 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(400)
 	_, err = c.LookupEmailPastes("test@example.com")
@@ -123,7 +122,7 @@ func TestLookupEmailPastes(t *testing.T) {
 		assert.Equal(t, "bad request - the provided email address is not acceptable", err.Error(), "testing 400 status code")
 	}
 
-	//test a 404 response code
+	// test a 404 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(404)
 	_, err = c.LookupEmailPastes("test@example.com")
@@ -131,7 +130,7 @@ func TestLookupEmailPastes(t *testing.T) {
 		assert.Equal(t, "not found - the account could not be found at haveibeenpwned.com", err.Error(), "testing 404 status code")
 	}
 
-	//test a 429 response code
+	// test a 429 response code
 	gock.New("https://haveibeenpwned.com").
 		Reply(429)
 	_, err = c.LookupEmailPastes("test@example.com")
@@ -139,7 +138,7 @@ func TestLookupEmailPastes(t *testing.T) {
 		assert.Equal(t, "rate limit exceeded", err.Error(), "testing 429 status code")
 	}
 
-	//test invalid json
+	// test invalid json
 	gock.New("https://haveibeenpwned.com").
 		Reply(200).
 		JSON("{this is broken JSON! ")
